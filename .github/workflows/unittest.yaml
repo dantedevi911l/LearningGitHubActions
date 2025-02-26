@@ -1,0 +1,60 @@
+# This is the yaml file for CI which will get executed by CY
+
+# the contents of the file are in key,value pair format
+# there are certain keywords with specific meaning like 'name', 'on'
+
+
+# The name of our workflow
+name: Python CI
+
+# now to trigger this workflow(execution of this file), we need to define certain events
+# those events can be pull request, push to a branch, merge etc.
+
+# the trigger is defined using "on" keyword
+
+# Our workflow is triggered when we push to the main branch or make a pull request to the main branch
+on:
+  push:
+    branches:
+      - main
+
+  pull request:
+    branches:
+      - main
+
+# upon trigger of certain events, jobs must be executed
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    # 'runs-on' is the container within which code is built and run.
+    # 'ubuntu-latest' is the one of existing containers within GitHub actions
+
+    # now we define the steps to run.
+    # We break them down into blocks of sub-steps. We can define as many sub-steps as we want
+    steps:
+      # Step 1 - Checkout code from the repository
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      # Step 2 - Set up python environment
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with: 
+          python-version: '3.10'
+
+      # Step 3 - Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4 - Run tests
+      # as soon as the command 'pytest' is run, it will try to find the tests folder and 
+      # ..execute test files within that
+      - name: Run tests
+        run: pytest
+      
+
+
